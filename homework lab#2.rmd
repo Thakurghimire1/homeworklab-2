@@ -1,0 +1,143 @@
+---
+title: "H/W Lab#2"
+author: "Thakur Prasad Ghimire"
+date: "9/21/2021"
+output: word_document
+---
+
+1.What are the names of the people in your study group?
+
+
+.Thakur Ghimire 
+.Nicholas Alonso 
+.Bolina Oxilus 
+.Diep luu 
+Joel rosas 
+
+2.Write up the results of your Lab 2 work. I don’t want all of your output, please pick the interesting bits (and start thinking about what makes a result interesting?).
+
+
+```{r setup,include=TRUE}
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(readr)
+library(readxl)
+```
+
+```{r}
+acs2017_ny_data <- read_csv("C:/acs2017_ny_data.RData")
+```
+
+
+```{r}
+summary(acs2017_ny_data)
+```
+
+
+#first change the factor back in to a numaber.
+```{r}
+ 
+ acs2017_ny$IND_number <- as.numeric(levels(acs2017_ny$IND))[acs2017_ny$IND]
+ acs2017_ny$Covid_risk <- ((acs2017_ny$IND_number > 4600) & acs2017_ny$IND_number < 6000) | ((acs2017_ny$IND_number > 8500) & (acs2017_ny$IND_number < 8700))
+
+```
+
+
+
+```{r}
+group_by<-Covid_risk$EGFIELD%>%
+  arrange(desc(Percentage))
+
+```
+
+
+
+# Among the degreefield i choose the psychology and fine arts to compare and analyze provided data.
+```{r}
+Psychology <- acs2017_ny[acs2017_ny$DEGFIELD=='Psychology', ]
+Psychology %>% count(Covid_risk, sort = TRUE)
+```
+
+```{r}
+psychology_by_sex <- fine_arts %>% 
+  filter(!is.na(Covid_risk)) %>% 
+  group_by(Covid_risk, SEX) %>% 
+  summarise(Count=n()) %>%
+  mutate(Percentage=Count/sum(Count)*100)
+
+```
+
+
+
+```{r}
+ggplot(psychology_by_sex, aes(fill=Covid_risk, y=Percentage, x=SEX)) + 
+  geom_histogram(position="dodge", stat="identity")
+
+
+```
+
+```{r}
+ggplot(psychology_by_sex, aes(fill=Covid_risk, y=Percentage, x=SEX)) + 
+  geom_histogram(position="dodge", stat="identity")
+
+```
+```{r}
+psychology_by_citizen <- fine_arts %>% 
+  filter(!is.na(Covid_risk))%>% 
+  group_by(Covid_risk, CITIZEN) %>% 
+  summarise(Count=n()) %>%
+  mutate(Percentage=Count/sum(Count)*100)
+
+
+```
+
+
+
+
+```{r}
+ggplot(psychology_by_citizen, aes(fill=Covid_risk, y=Percentage, x=CITIZEN)) + 
+  geom_histogram(position="dodge", stat="identity")
+
+```
+
+```{r}
+fine_arts <- acs2017_ny[acs2017_ny$DEGFIELD=='Fine Arts', ]
+fine_arts %>% count(Covid_risk, sort = TRUE)
+```
+```{r}
+fine_arts_by_sex <- fine_arts %>% 
+  filter(!is.na(Covid_risk)) %>% 
+  group_by(Covid_risk, SEX) %>% 
+  summarise(Count=n()) %>%
+  mutate(Percentage=Count/sum(Count)*100)
+
+
+```
+
+
+```{r}
+ggplot(fine_arts_by_sex, aes(fill=Covid_risk, y=Percentage, x=SEX)) + 
+  geom_histogram(position="dodge", stat="identity")
+
+```
+
+
+
+
+
+
+```{r}
+ggplot(fine_arts_by_citizen, aes(fill=Covid_risk, y=Percentage, x=CITIZEN)) + 
+  geom_histogram(position="dodge", stat="identity")
+
+
+
+```
+
+
+
+
+
+
+
